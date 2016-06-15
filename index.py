@@ -82,6 +82,29 @@ def create_index(ctx, index, **kwargs):
     ctx.obj.indicesClient.create(index, **kwargs)
 
 
+@cli.command(help='Create Mapping')
+@click.argument('indexes')
+@click.argument('doc_type')
+@click.argument('mapping_file')
+@click.option('--allow_no_indices', type=bool, required=False)
+@click.option('--expand_wildcards', type=click.Choice(
+    ['open', 'closed', 'none', 'all']), required=False)
+@click.option('--flat_settings', type=bool, required=False)
+@click.option('--ignore_unavailable', type=click.Choice(
+    ['missing', 'closed']), required=False)
+@click.option('--preserve_existing', type=bool, required=False)
+@click.option('--master_timeout', type=int, required=False)
+@click.option('--timeout', type=int, required=False)
+@click.option('--update_all_types', type=bool, required=False)
+@click.pass_context
+def change_mapping(ctx, indexes, doc_type, mapping_file, **kwargs):
+    kwargs = {k: v for k, v in kwargs.iteritems() if v}
+    with open(mapping_file) as f:
+        body = f.read()
+        ctx.obj.indicesClient.put_mapping(
+            doc_type, body, _split_arg(indexes), **kwargs)
+
+
 @cli.command(help='Delete indexes')
 @click.argument('indexes')
 @click.pass_context
