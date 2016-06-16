@@ -28,7 +28,7 @@ def cli(ctx, hosts):
 
 
 @cli.command(help='Get aliases for index')
-@click.argument('index')
+@click.option('-i', '--index', required=True, help='index')
 @click.pass_context
 def get_aliases(ctx, index):
     print json.dumps(
@@ -37,8 +37,8 @@ def get_aliases(ctx, index):
 
 
 @cli.command(help='Delete alias from indexes')
-@click.argument('indexes')
-@click.argument('aliases')
+@click.option('-i', '--indexes', required=True, help='indexes (comma separated list)')  # nopep8
+@click.option('-a', '--alias', required=True, help='alias')
 @click.pass_context
 def delete_aliases(ctx, indexes, aliases):
     ctx.obj.indicesClient.delete_alias(
@@ -46,8 +46,8 @@ def delete_aliases(ctx, indexes, aliases):
 
 
 @cli.command(help='Create alias for indexes')
-@click.argument('indexes')
-@click.argument('alias')
+@click.option('-i', '--indexes', required=True, help='indexes')
+@click.option('-a', '--alias', required=True, help='alias')
 @click.pass_context
 def create_alias(ctx, indexes, alias):
     ctx.obj.indicesClient.put_alias(
@@ -55,9 +55,9 @@ def create_alias(ctx, indexes, alias):
 
 
 @cli.command(help='Move alias from one index to another')
-@click.argument('alias')
-@click.argument('index_from')
-@click.argument('index_to')
+@click.option('-a', '--alias', required=True, help='alias')
+@click.option('-f', '--index_from', required=True, help='index from')
+@click.option('-t', '--index_to', required=True, help='index to')
 @click.pass_context
 def move_alias(ctx, alias, index_from, index_to):
     actions = [
@@ -71,11 +71,11 @@ def move_alias(ctx, alias, index_from, index_to):
 
 
 @cli.command(help='Create index')
-@click.argument('index')
-@click.option('--body', type=str, required=False)
-@click.option('--master_timeout', type=int, required=False)
-@click.option('--timeout', type=int, required=False)
-@click.option('--update_all_types', type=bool, required=False)
+@click.option('-i', '--index', required=True, help='index')
+@click.option('--body', type=str, required=False, help='The configuration for the index')  # nopep8
+@click.option('--master_timeout', type=int, required=False, help='Specify timeout for connection to master')  # nopep8
+@click.option('--timeout', type=int, required=False, help='Explicit operation timeout')  # nopep8
+@click.option('--update_all_types', type=bool, required=False, help='Whether to update the mapping for all fields with the same name across all types or not')  # nopep8
 @click.pass_context
 def create_index(ctx, index, **kwargs):
     kwargs = {k: v for k, v in kwargs.iteritems() if v}
@@ -83,9 +83,9 @@ def create_index(ctx, index, **kwargs):
 
 
 @cli.command(help='Create Mapping')
-@click.argument('indexes')
-@click.argument('doc_type')
-@click.argument('mapping_file')
+@click.option('-i', '--indexes', required=True, help='indexes (comma separated list)')  # nopep8
+@click.option('-t', '--doc_type', required=True, help='The name of the document type')  # nopep8
+@click.option('-m', '--mapping_file', help='Path to to file with the mapping definition')  # nopep8
 @click.option('--allow_no_indices', type=bool, required=False)
 @click.option('--expand_wildcards', type=click.Choice(
     ['open', 'closed', 'none', 'all']), required=False)
@@ -106,7 +106,7 @@ def change_mapping(ctx, indexes, doc_type, mapping_file, **kwargs):
 
 
 @cli.command(help='Delete indexes')
-@click.argument('indexes')
+@click.option('-i', '--indexes', required=True, help='indexes (comma separated list)')  # nopep8
 @click.pass_context
 def delete_index(ctx, indexes):
     ctx.obj.indicesClient.delete(
@@ -114,8 +114,8 @@ def delete_index(ctx, indexes):
 
 
 @cli.command(help='Reindex one index to another (!Experimental, don\'t use it for large indexes)')  # nopep8
-@click.argument('index_from')
-@click.argument('index_to')
+@click.option('-f', '--index_from', required=True, help='index from')
+@click.option('-t', '--index_to', required=True, help='index to')
 @click.pass_context
 def reindex(ctx, index_from, index_to):
     elasticsearch.helpers.reindex(
