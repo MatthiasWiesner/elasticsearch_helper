@@ -48,5 +48,8 @@ Options:
 ### Example:
 Move alias from one index to another:
 ```
-python index.py -h 10.210.0.30 move_alias -a openhpi -f openhpi_v5 -t openhpi_v6
+python index.py -h 10.210.0.30 create_index -i opensap_v7
+python index.py -h 10.210.0.30 change_mapping -i opensap_v7 -t EXP_STATEMENT -m ./exp_statement.json
+python index.py -h 10.210.0.30 change_mapping -i opensap_v7 -t referral -m ./referral.json
+python index.py -h 10.210.0.30 move_alias -a opensap -f opensap_v6 -t opensap_v7
 ```
