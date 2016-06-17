@@ -45,8 +45,7 @@ Options:
   --help                 Show this message and exit.
 ```
 
-### Example:
-Move alias from one index to another:
+### Examples:
 ```
 python index.py -h 10.210.0.30 create_index -i opensap_v7
 python index.py -h 10.210.0.30 change_mapping -i opensap_v7 -t EXP_STATEMENT -m ./exp_statement.json
