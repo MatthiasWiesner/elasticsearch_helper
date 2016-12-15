@@ -72,13 +72,15 @@ def move_alias(ctx, alias, index_from, index_to):
 
 @cli.command(help='Create index')
 @click.option('-i', '--index', required=True, help='index')
-@click.option('--body', type=str, required=False, help='The configuration for the index')  # nopep8
+@click.option('-c', '--configuration_file', type=str, required=False, help='Path to the configuration file for the index')  # nopep8
 @click.option('--master_timeout', type=int, required=False, help='Specify timeout for connection to master')  # nopep8
 @click.option('--timeout', type=int, required=False, help='Explicit operation timeout')  # nopep8
 @click.option('--update_all_types', type=bool, required=False, help='Whether to update the mapping for all fields with the same name across all types or not')  # nopep8
 @click.pass_context
-def create_index(ctx, index, **kwargs):
+def create_index(ctx, index, configuration_file, **kwargs):
     kwargs = {k: v for k, v in kwargs.iteritems() if v}
+    if configuration_file:
+        kwargs['body'] = open(configuration_file).read()
     ctx.obj.indicesClient.create(index, **kwargs)
 
 
